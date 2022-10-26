@@ -1,5 +1,9 @@
 const fs = require("fs");
 
+const express = require('express');
+const aplicacion = express();
+const port = 8080;
+
 class Contenedor {
     constructor(archivo) {
         this.archivo = archivo;
@@ -163,6 +167,37 @@ class Contenedor {
             );
         }
     }
+
 }
 
 module.exports = Contenedor;
+
+  
+  const implementacion = async () => {
+  };
+  
+  const lista = new Contenedor('productos.txt');
+  
+  //Endpoints***
+  
+  aplicacion.get('/productos', async (peticion, respuesta) => {
+    const all = await lista.getAll();
+    respuesta.json(all);
+  });
+  
+  aplicacion.get('/indiceRandom', async (peticion, respuesta) => {
+  
+    const all = await lista.getAll();
+    const random = Math.floor(Math.random() * all.length);
+    //Llamado a la funcion para obtener el id
+    respuesta.json({
+      random: random
+    });
+  });
+  
+  
+  const servidor = aplicacion.listen(port, () => {
+    console.log(`Servidor escuchando: ${servidor.address().port}`);
+  });
+  
+  servidor.on('error', error => console.log(`Error: ${error}`));
