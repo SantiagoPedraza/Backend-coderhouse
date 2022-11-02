@@ -1,8 +1,13 @@
-const fs = require("fs");
-
 const express = require('express');
+const { Router } = express;
 const aplicacion = express();
+const rutaProductos = Router();
 const port = 8080;
+
+aplicacion.use(express.json());
+aplicacion.use(express.urlencoded({ extended: true }));
+
+aplicacion.use('/static', express.static(__dirname + '/public'));
 
 class Contenedor {
     constructor(archivo) {
@@ -170,34 +175,47 @@ class Contenedor {
 
 }
 
-module.exports = Contenedor;
+const productos = new Contenedor([]);
 
+
+rutaProductos.get('/:id', (peticion, respuesta) => {
+  const id = parseInt(peticion.params.id);
+  const producto = productos.getById(id);
+  if (producto) {
+    respuesta.json(producto);
+  } else {
+    respuesta.status(404);
+    respuesta.json({ error : 'producto no encontrado' });
+  }
   
-  const implementacion = async () => {
-  };
-  
-  const lista = new Contenedor('productos.txt');
-  
-  //Endpoints***
-  
-  aplicacion.get('/productos', async (peticion, respuesta) => {
-    const all = await lista.getAll();
-    respuesta.json(all);
+});
+
+rutaProductos.get('/', (peticion, respuesta) => {
+  const listaProductos = productos.getAll();
+  respuesta.json(listaProductos);
+});
+
+rutaProductos.post('/', (peticion, respuesta) => {
+});
+
+rutaProductos.put('/:id', (peticion, respuesta) => {
+  const producto = peticion.body;
+  const id = peticion.params.id;
+
+  productos.update({id , ...producto});
+  respuesta.json({
+    status: "ok"
   });
-  
-  aplicacion.get('/indiceRandom', async (peticion, respuesta) => {
-  
-    const all = await lista.getAll();
-    const random = Math.floor(Math.random() * all.length);
-    //Llamado a la funcion para obtener el id
-    respuesta.json({
-      random: random
-    });
-  });
-  
-  
-  const servidor = aplicacion.listen(port, () => {
-    console.log(`Servidor escuchando: ${servidor.address().port}`);
-  });
-  
-  servidor.on('error', error => console.log(`Error: ${error}`));
+});
+
+rutaProductos.delete('/:id', (peticion, respuesta) => {
+});
+
+aplicacion.use('/api/productos', rutaProductos);
+
+const servidor = aplicacion.listen(port, () => {
+  console.log(`Servidor escuchando: ${servidor.address().port}`);
+});
+
+servidor.on('error', error => console.log(`Error: ${error}`));
+
