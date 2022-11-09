@@ -7,6 +7,9 @@ const port = 8080;
 aplicacion.use(express.json());
 aplicacion.use(express.urlencoded({ extended: true }));
 
+aplicacion.set('views', __dirname + '/views');
+aplicacion.set('view engine', 'pug');
+
 aplicacion.use('/static', express.static(__dirname + '/public'));
 
 class Contenedor {
@@ -177,45 +180,29 @@ class Contenedor {
 
 const productos = new Contenedor([]);
 
-
-rutaProductos.get('/:id', (peticion, respuesta) => {
-  const id = parseInt(peticion.params.id);
-  const producto = productos.getById(id);
-  if (producto) {
-    respuesta.json(producto);
-  } else {
-    respuesta.status(404);
-    respuesta.json({ error : 'producto no encontrado' });
-  }
-  
-});
-
-rutaProductos.get('/', (peticion, respuesta) => {
-  const listaProductos = productos.getAll();
-  respuesta.json(listaProductos);
-});
-
-rutaProductos.post('/', (peticion, respuesta) => {
-});
-
-rutaProductos.put('/:id', (peticion, respuesta) => {
-  const producto = peticion.body;
-  const id = peticion.params.id;
-
-  productos.update({id , ...producto});
-  respuesta.json({
-    status: "ok"
+aplicacion.get('/productos', (peticion, respuesta) => {
+    const listaProductos = productos.getAll();
+    respuesta.render('lista', {
+      productos: listaProductos
+    });
   });
-});
-
-rutaProductos.delete('/:id', (peticion, respuesta) => {
-});
-
-aplicacion.use('/api/productos', rutaProductos);
-
-const servidor = aplicacion.listen(port, () => {
-  console.log(`Servidor escuchando: ${servidor.address().port}`);
-});
-
-servidor.on('error', error => console.log(`Error: ${error}`));
-
+  
+  aplicacion.post('/productos', (peticion, respuesta) => {
+    const producto = peticion.body;
+    productos.save(producto);
+    respuesta.render('formulario', {});
+  });
+  
+  aplicacion.get('/', (peticion, respuesta) => {
+    respuesta.render('formulario', {});
+  });
+  
+  
+  
+  
+  const servidor = aplicacion.listen(port, () => {
+    console.log(`Servidor escuchando: ${servidor.address().port}`);
+  });
+  
+  servidor.on('error', error => console.log(`Error: ${error}`));
+  
