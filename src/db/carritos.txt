@@ -1,5 +1,9 @@
 [
-    {
+  {
+    "id": 1,
+    "timestamp": 1668647566189,
+    "productos": [
+      {
         "nombre": "Iphone 14 pro max",
         "descripcion": "Iphone 14 pro max 256Gb",
         "timestamp": 1668647566189,
@@ -8,7 +12,12 @@
         "stock": 10,
         "foto": "https://cdn.shopify.com/s/files/1/1043/3082/products/iPhone_14_Pro_Deep_Purple_PDP_Image_Position-1A_Deep_Purple_Color_SEA_540x.jpg?v=1662618887",
         "id": 1
-    },
-  
- 
+      }
+    ]
+  },
+  {
+    "timestamp": 1669160390270,
+    "productos": [],
+    "id": 2
+  }
 ]
