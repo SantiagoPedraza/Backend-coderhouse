@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+const fs = require('fs');
 
 export class Contenedor {
   constructor(nombre) {
@@ -76,3 +76,5 @@ export class Contenedor {
     await fs.promises.writeFile(this.nombre, JSON.stringify(arregloVacio, null, 2));
   }
 }
+
+module.exports = Contenedor;
