@@ -1,31 +1,65 @@
-const knex = require('knex');
+import knex from 'knex'
 
-class Contenedor {
-  constructor(options, table) {
-    this.connection = knex(options);
-    this.table = table;
-  }
+class ContenedorSQL {
 
-  async save(objeto) {
-    await this.connection(this.table).insert(objeto);
-  }
+    constructor(config, tabla) {
+        this.knex = knex(config)
+        this.tabla = tabla
+    }
 
-  async getById(id) {
-    return await this.connection(this.table).where('id', id);
-  }
+    async listar(id) {
+        try {
+            return this.knex.select('*').from(this.tabla).where('id', id)
+        } catch (error) {
+            throw new Error(`Error al listar por id: ${error}`)
+        }
+    }
 
-  async getAll() {
-    return await this.connection(this.table);
-  }
+    async listarAll() {
+        try {
+            return this.knex.select('*').from(this.tabla)
+        } catch (error) {
+            throw new Error(`Error al listar todo: ${error}`)
+        }
+    }
 
-  async deleteById(id) {
-    await this.connection(this.table).where('id', id).del();
-    return id;
-  }
+    async guardar(elem) {
+        try {
+            return this.knex.insert(elem).into(this.tabla)
+        } catch (error) {
+            throw new Error(`Error al guardar: ${error}`)
+        }
+    }
 
-  async deleteAll() {
-    await this.connection(this.table).del();
-  }
+    async actualizar(elem, id) {
+        try {
+            return this.knex.from(this.tabla).where('id', id).update(elem)
+        } catch (error) {
+            throw new Error(`Error al borrar: ${error}`)
+        }
+    }
+
+
+
+    async borrar(id) {
+        try {
+            return this.knex.delete().from(this.tabla).where('id', id)
+        } catch (error) {
+            throw new Error(`Error al borrar: ${error}`)
+        }
+    }
+
+    async borrarAll() {
+        try {
+            return this.knex.delete().from(this.tabla)
+        } catch (error) {
+            throw new Error(`Error al borrar: ${error}`)
+        }
+    }
+
+    async desconectar() {
+        await this.knex.destroy();
+    }
 }
 
-module.exports = Contenedor;
+export default ContenedorSQL

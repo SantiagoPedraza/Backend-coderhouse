@@ -1,68 +1,93 @@
+import express from 'express'
+import faker from 'faker'
+faker.locale = 'es';
 
-const express = require('express');
-const moment = require('moment');
-const aplicacion = express();
-const { Server: HttpServer } = require('http');
-const { Server: IOServer } = require('socket.io');
-const Contenedor = require('./contenedor/contenedorSql');
-const options = require('./connection/options.js');
+import { Server as HttpServer } from 'http'
+import { Server as Socket } from 'socket.io'
 
-const port = 8080;
-const publicRoot = './public';
+import ContenedorMemoria from './contenedores/ContenedorMemoria.js'
 
-
-aplicacion.use(express.json());
-aplicacion.use(express.urlencoded({ extended: true }));
-
-const httpServer = new HttpServer(aplicacion);
-const io = new IOServer(httpServer);
-
-
-aplicacion.use(express.static(publicRoot));
-
-
-const productos = new Contenedor(options.mysql, 'productos');
-const mensajes = new Contenedor(options.sqlite3, 'mensajes');
+import { normalize, schema } from 'normalizr';
 
 
 
-aplicacion.get('/', (peticion, respuesta) => {
-  respuesta.send('index.html', { root: publicRoot });
+const app = express()
+const httpServer = new HttpServer(app)
+const io = new Socket(httpServer)
+
+const productosApi = new ContenedorMemoria()
+const mensajesApi = new ContenedorMemoria()
+
+
+io.on('connection', async socket => {
+    console.log('Nuevo cliente conectado!');
+
+    
+    socket.emit('productos', await productosApi.listarAll());
+
+    
+    socket.on('update', async producto => {
+        await productosApi.guardar(producto)
+        io.sockets.emit('productos', await productosApi.listarAll());
+    })
+
+    
+    socket.emit('mensajes', await obtenerMensajesNormalizados());
+
+    
+    socket.on('nuevoMensaje', async mensaje => {
+        mensaje.fyh = new Date().toLocaleString()
+        await mensajesApi.guardar(mensaje)
+        io.sockets.emit('mensajes', await obtenerMensajesNormalizados());
+    })
 });
 
 
 
+const autorSchema = new schema.Entity('autor', {}, { idAttribute: 'email' });
+
+const mensajeSchema = new schema.Entity('post', {
+    autor: autorSchema
+}, { idAttribute: 'id' });
+
+const mensajesSchema = new schema.Entity('posts', {
+    mensajes: [mensajeSchema]
+}, { idAttribute: 'id' });
 
 
-const servidor = httpServer.listen(port, () => {
-  console.log(`Servidor escuchando: ${servidor.address().port}`);
+
+const obtenerMensajesNormalizados = async () => {
+    const arregloMensajes = await mensajesApi.listarAll();
+    return normalize({
+        id: 'mensajes',
+        mensajes: arregloMensajes,
+    }, mensajesSchema);
+};
+
+
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
+
+
+
+app.get('/api/productos-test', (req, res) => {
+    const productosAleatorios = [];
+    for (let index = 0; index < 5; index++) {
+        productosAleatorios.push({
+            id: index + 1,
+            title: faker.commerce.product(),
+            price: faker.commerce.price(),
+            thumbnail: faker.image.imageUrl()
+        });
+    }
+    res.json(productosAleatorios);
 });
 
-servidor.on('error', error => console.log(`Error: ${error}`));
 
-
-
-
-io.on('connection', async (socket) => {
-  console.log('Nuevo cliente conectado!');
-
-  const listaProductos = await productos.getAll();
-  socket.emit('nueva-conexion', listaProductos);
-
-  socket.on("new-product", (data) => {
-    productos.save(data);
-    io.sockets.emit('producto', data);
-  });
-
-  
-  const listaMensajes = await mensajes.getAll();
-  socket.emit('messages', listaMensajes);
-
-  //Evento para recibir nuevos mensajes
-  socket.on('new-message', async data => {
-    data.time = moment(new Date()).format('DD/MM/YYYY hh:mm:ss');
-    await mensajes.save(data);
-    const listaMensajes = await mensajes.getAll();
-    io.sockets.emit('messages', listaMensajes);
-  });
-});
+const PORT = 8080
+const connectedServer = httpServer.listen(PORT, () => {
+    console.log(`Servidor http escuchando en el puerto ${connectedServer.address().port}`)
+})
+connectedServer.on('error', error => console.log(`Error en servidor ${error}`))
