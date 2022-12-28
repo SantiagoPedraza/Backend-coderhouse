@@ -27,9 +27,9 @@ class ContenedorMemoria {
         return newElem
     }
 
-    actualizar(elem, id) {
-        const newElem = { id: Number(id), ...elem }
-        const index = this.elementos.findIndex(p => p.id == id)
+    actualizar(elem) {
+        const newElem = { ...elem, id: Number(elem.id) }
+        const index = this.elementos.findIndex(p => p.id == elem.id)
         if (index == -1) {
             return { error: `elemento no encontrado` }
         } else {

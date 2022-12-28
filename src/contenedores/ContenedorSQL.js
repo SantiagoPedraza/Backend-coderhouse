@@ -31,9 +31,9 @@ class ContenedorSQL {
         }
     }
 
-    async actualizar(elem, id) {
+    async actualizar(elem) {
         try {
-            return this.knex.from(this.tabla).where('id', id).update(elem)
+            return this.knex.from(this.tabla).where('id', elem.id).update(elem)
         } catch (error) {
             throw new Error(`Error al borrar: ${error}`)
         }

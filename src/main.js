@@ -1,93 +1,61 @@
 import express from 'express'
-import faker from 'faker'
-faker.locale = 'es';
+
+import config from './config.js'
 
 import { Server as HttpServer } from 'http'
 import { Server as Socket } from 'socket.io'
 
-import ContenedorMemoria from './contenedores/ContenedorMemoria.js'
+import authWebRouter from './routers/web/auth.js'
+import homeWebRouter from './routers/web/home.js'
+import productosApiRouter from './routers/api/productos.js'
 
-import { normalize, schema } from 'normalizr';
+import addProductosHandlers from './routers/ws/productos.js'
+import addMensajesHandlers from './routers/ws/mensajes.js'
+
+//TO DO: Importar el session-mongo
+//Configurar el session
 
 
+//--------------------------------------------
+// instancio servidor, socket y api
 
 const app = express()
 const httpServer = new HttpServer(app)
 const io = new Socket(httpServer)
 
-const productosApi = new ContenedorMemoria()
-const mensajesApi = new ContenedorMemoria()
-
+//--------------------------------------------
+// configuro el socket
 
 io.on('connection', async socket => {
-    console.log('Nuevo cliente conectado!');
-
-    
-    socket.emit('productos', await productosApi.listarAll());
-
-    
-    socket.on('update', async producto => {
-        await productosApi.guardar(producto)
-        io.sockets.emit('productos', await productosApi.listarAll());
-    })
-
-    
-    socket.emit('mensajes', await obtenerMensajesNormalizados());
-
-    
-    socket.on('nuevoMensaje', async mensaje => {
-        mensaje.fyh = new Date().toLocaleString()
-        await mensajesApi.guardar(mensaje)
-        io.sockets.emit('mensajes', await obtenerMensajesNormalizados());
-    })
+    // console.log('Nuevo cliente conectado!');
+    addProductosHandlers(socket, io.sockets)
+    addMensajesHandlers(socket, io.sockets)
 });
 
-
-
-const autorSchema = new schema.Entity('autor', {}, { idAttribute: 'email' });
-
-const mensajeSchema = new schema.Entity('post', {
-    autor: autorSchema
-}, { idAttribute: 'id' });
-
-const mensajesSchema = new schema.Entity('posts', {
-    mensajes: [mensajeSchema]
-}, { idAttribute: 'id' });
-
-
-
-const obtenerMensajesNormalizados = async () => {
-    const arregloMensajes = await mensajesApi.listarAll();
-    return normalize({
-        id: 'mensajes',
-        mensajes: arregloMensajes,
-    }, mensajesSchema);
-};
-
-
+//--------------------------------------------
+// configuro el servidor
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 
+app.set('view engine', 'ejs');
 
+//--------------------------------------------
+// rutas del servidor API REST
 
-app.get('/api/productos-test', (req, res) => {
-    const productosAleatorios = [];
-    for (let index = 0; index < 5; index++) {
-        productosAleatorios.push({
-            id: index + 1,
-            title: faker.commerce.product(),
-            price: faker.commerce.price(),
-            thumbnail: faker.image.imageUrl()
-        });
-    }
-    res.json(productosAleatorios);
-});
+app.use(productosApiRouter)
 
+//--------------------------------------------
+// rutas del servidor web
 
-const PORT = 8080
-const connectedServer = httpServer.listen(PORT, () => {
+app.use(authWebRouter)
+app.use(homeWebRouter)
+
+//--------------------------------------------
+// inicio el servidor
+
+const connectedServer = httpServer.listen(config.PORT, () => {
     console.log(`Servidor http escuchando en el puerto ${connectedServer.address().port}`)
 })
 connectedServer.on('error', error => console.log(`Error en servidor ${error}`))

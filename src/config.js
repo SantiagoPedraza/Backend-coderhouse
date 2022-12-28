@@ -1,4 +1,13 @@
 export default {
+    PORT: process.env.PORT || 8080,
+    mongoLocal: {
+        client: 'mongodb',
+        cnxStr: 'mongodb://localhost:27017/coderhouse'
+    },
+    mongoRemote: {
+        client: 'mongodb',
+        cnxStr: 'mongodb+srv://root:root@cluster0.7yey2qr.mongodb.net/ecommerce?retryWrites=true&w=majority’'
+    },
     sqlite3: {
         client: 'sqlite3',
         connection: {
@@ -10,9 +19,12 @@ export default {
         client: 'mysql',
         connection: {
             host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'mibase'
+            user: 'coderhouse',
+            password: 'coderhouse',
+            database: 'coderhouse'
         }
+    },
+    fileSystem: {
+        path: './DB'
     }
 }

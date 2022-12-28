@@ -1,5 +1,6 @@
 const socket = io.connect();
 
+//------------------------------------------------------------------------------------
 
 const formAgregarProducto = document.getElementById('formAgregarProducto')
 formAgregarProducto.addEventListener('submit', e => {
@@ -29,82 +30,80 @@ function makeHtmlTable(productos) {
         })
 }
 
+//-------------------------------------------------------------------------------------
 
+// MENSAJES
 
-const autorSchema = new normalizr.schema.Entity('autor', {}, { idAttribute: 'email' });
+/* --------------------- DESNORMALIZACIÓN DE MENSAJES ---------------------------- */
+// Definimos un esquema de autor
+const schemaAuthor = new normalizr.schema.Entity('author', {}, { idAttribute: 'id' });
 
-const mensajeSchema = new normalizr.schema.Entity('post', {
-    autor: autorSchema
-}, { idAttribute: 'id' });
+// Definimos un esquema de mensaje
+const schemaMensaje = new normalizr.schema.Entity('post', { author: schemaAuthor }, { idAttribute: '_id' })
 
-const mensajesSchema = new normalizr.schema.Entity('posts', {
-    mensajes: [mensajeSchema]
-}, { idAttribute: 'id' });
+// Definimos un esquema de posts
+const schemaMensajes = new normalizr.schema.Entity('posts', { mensajes: [schemaMensaje] }, { idAttribute: 'id' })
+/* ----------------------------------------------------------------------------- */
 
-
-
-
-const inputUsername = document.getElementById('inputUsername')
+const inputUsername = document.getElementById('username')
 const inputMensaje = document.getElementById('inputMensaje')
-
-const inputEmail = document.getElementById('inputEmail')
-const inputNombre = document.getElementById('inputNombre')
-const inputApellido = document.getElementById('inputApellido')
-const inputEdad = document.getElementById('inputEdad')
-const inputAlias = document.getElementById('inputAlias')
-const inputAvatar = document.getElementById('inputAvatar')
-
 const btnEnviar = document.getElementById('btnEnviar')
 
 const formPublicarMensaje = document.getElementById('formPublicarMensaje')
 formPublicarMensaje.addEventListener('submit', e => {
     e.preventDefault()
 
-    const mensaje = { 
-        autor: {
-            email: inputEmail.value,
-            nombre: inputNombre.value,
-            apellido: inputApellido.value,
-            edad: inputEdad.value,
-            alias: inputAlias.value,
-            avatar: inputAvatar.value,
-        }, 
-        texto: inputMensaje.value 
+    const mensaje = {
+        author: {
+            email: inputUsername.value,
+            nombre: document.getElementById('firstname').value,
+            apellido: document.getElementById('lastname').value,
+            edad: document.getElementById('age').value,
+            alias: document.getElementById('alias').value,
+            avatar: document.getElementById('avatar').value
+        },
+        text: inputMensaje.value
     }
+
     socket.emit('nuevoMensaje', mensaje);
     formPublicarMensaje.reset()
     inputMensaje.focus()
 })
 
-socket.on('mensajes', mensajes => {
-    
-    const tamanioNormalizado = JSON.stringify(mensajes).length;
+socket.on('mensajes', mensajesN => {
 
-    const mensajesDesnormalizados = normalizr.denormalize(mensajes.result, mensajesSchema, mensajes.entities);
+    const mensajesNsize = JSON.stringify(mensajesN).length
+    console.log(mensajesN, mensajesNsize);
 
-    const tamanioDesnormalizado = JSON.stringify(mensajesDesnormalizados).length;
+    const mensajesD = normalizr.denormalize(mensajesN.result, schemaMensajes, mensajesN.entities)
 
-    const porcentaje = parseInt((tamanioNormalizado * 100)/tamanioDesnormalizado);
-    document.getElementById("compresion").innerText = porcentaje || 0;
-    // console.log(porcentaje);
-    const html = makeHtmlList(mensajesDesnormalizados?.mensajes)
+    const mensajesDsize = JSON.stringify(mensajesD).length
+    console.log(mensajesD, mensajesDsize);
+
+    const porcentajeC = parseInt((mensajesNsize * 100) / mensajesDsize)
+    console.log(`Porcentaje de compresión ${porcentajeC}%`)
+    document.getElementById('compresion-info').innerText = porcentajeC
+
+    console.log(mensajesD.mensajes);
+    const html = makeHtmlList(mensajesD.mensajes)
     document.getElementById('mensajes').innerHTML = html;
 })
 
 function makeHtmlList(mensajes) {
     return mensajes.map(mensaje => {
         return (`
-            <div>
-                <b style="color:blue;">${mensaje.autor.email}</b>
-                [<span style="color:brown;">${mensaje.fyh}</span>] :
-                <i style="color:green;">${mensaje.texto}</i>
-            </div>
-        `)
+        <div>
+            <b style="color:blue;">${mensaje.author.email}</b>
+            [<span style="color:brown;">${mensaje.fyh}</span>] :
+            <i style="color:green;">${mensaje.text}</i>
+            <img width="50" src="${mensaje.author.avatar}" alt=" ">
+        </div>
+    `)
     }).join(" ");
 }
 
-inputEmail.addEventListener('input', () => {
-    const hayEmail = inputEmail.value.length
+inputUsername.addEventListener('input', () => {
+    const hayEmail = inputUsername.value.length
     const hayTexto = inputMensaje.value.length
     inputMensaje.disabled = !hayEmail
     btnEnviar.disabled = !hayEmail || !hayTexto
