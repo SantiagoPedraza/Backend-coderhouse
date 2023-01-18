@@ -1,4 +1,6 @@
 import express from 'express'
+import session from 'express-session';
+import passport from 'passport'
 
 import config from './config.js'
 
@@ -8,13 +10,10 @@ import { Server as Socket } from 'socket.io'
 import authWebRouter from './routers/web/auth.js'
 import homeWebRouter from './routers/web/home.js'
 import productosApiRouter from './routers/api/productos.js'
+import randomsApiRouter from './routers/api/randoms.js'
 
 import addProductosHandlers from './routers/ws/productos.js'
 import addMensajesHandlers from './routers/ws/mensajes.js'
-
-//TO DO: Importar el session-mongo
-//Configurar el session
-
 
 //--------------------------------------------
 // instancio servidor, socket y api
@@ -41,10 +40,16 @@ app.use(express.static('public'))
 
 app.set('view engine', 'ejs');
 
+app.use(session(config.session))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 //--------------------------------------------
 // rutas del servidor API REST
 
 app.use(productosApiRouter)
+app.use(randomsApiRouter)
 
 //--------------------------------------------
 // rutas del servidor web

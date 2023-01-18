@@ -1,30 +1,45 @@
+import dotenv from 'dotenv'
+import parseArgs from 'minimist'
+
+dotenv.config()
+
+const argv = parseArgs(process.argv.slice(2), { alias: { p: 'port' }, default: { port: 8080 } })
+
+const sessionConfig = {
+    secret: 'shhhhhhhhhhhhhhhhhhhhh',
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+        maxAge: 60000
+    }
+};
+
 export default {
-    PORT: process.env.PORT || 8080,
+    PORT: argv.port,
+    session: sessionConfig,
     mongoLocal: {
         client: 'mongodb',
-        cnxStr: 'mongodb://localhost:27017/coderhouse'
+        cnxStr: process.env.MONGODB_LOCAL
     },
     mongoRemote: {
         client: 'mongodb',
-        cnxStr: 'mongodb+srv://root:root@cluster0.7yey2qr.mongodb.net/ecommerce?retryWrites=true&w=majority’'
+        cnxStr: process.env.MONGODB_REMOTO
     },
     sqlite3: {
         client: 'sqlite3',
         connection: {
-            filename: `./DB/ecommerce.sqlite`
+            filename: process.env.SQLITE3
         },
         useNullAsDefault: true
     },
     mariaDb: {
         client: 'mysql',
-        connection: {
-            host: 'localhost',
-            user: 'coderhouse',
-            password: 'coderhouse',
-            database: 'coderhouse'
-        }
+        connection: process.env.MYSQL
     },
     fileSystem: {
-        path: './DB'
-    }
+        path: process.env.FILESYSTEM
+    },
+    facebookClientId: process.env.FACEBOOK_CLIENT_ID,
+    facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
 }

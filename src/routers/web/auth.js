@@ -1,101 +1,32 @@
 import passport from 'passport';
+import { Strategy as FacebookStrategy } from 'passport-facebook'
+
+import config from '../../config.js'
 
 import { Router } from 'express'
-import bCrypt from 'bcrypt'
-
-import session from 'express-session';
 
 import path from 'path'
-import { Strategy } from 'passport-local';
 
-import { modeloUsuario } from '../../models/usuario.js';
-import { config } from 'process';
-
-//----------------------------------------
-//Funciones de encriptacion del password
-
-const createHash = (password) => {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10))
-}
-
-const isValidPassword = (password, usuario) =>{
-    return bCrypt.compareSync(password, usuario.password);
-}
-
-//----------------------------------------
-
-passport.use('register', new Strategy({
-    passReqToCallback: true
-  }, (req, username, password, done) => {
-    modeloUsuario.findOne({'email': username}, (err, usuario) => {
-        if (err) {
-            return done(err, false);
-        }
-
-        if (usuario) {
-            return done(err, false);
-        }
-
-        const nuevoUsuario = {
-            username: username,
-            password: createHash(password),
-            email: username,
-        }
-
-        modeloUsuario.create(nuevoUsuario, (err, usuarioCreado) => {
-            if (err) {
-                return done(err, false);
-            }
-            console.log("Usuario registrado");
-            return done(null, usuarioCreado);
-        });
-    })
-  } ));
-  
-passport.use('login', new Strategy((username, password, done) => {
-
-
-    modeloUsuario.findOne({ email: username }, (err, usuario) => {
-        if (err) {
-            return done(null, false);
-        }
-
-        if (!usuario) {
-            return done(null, false);
-        }
-
-        if (!isValidPassword(password, usuario)) {
-            return done(null, false);
-        }
-        console.log("Login exitoso");
-        return done(null, usuario)
-    });
+passport.use(new FacebookStrategy({
+    clientID: config.facebookClientId,
+    clientSecret: config.facebookClientSecret,
+    callbackURL: '/auth/facebook/callback',
+    profileFields: ['id', 'displayName', 'photos', 'emails'],
+    scope: ['email']
+}, function (accessToken, refreshToken, profile, done) {
+    let userProfile = profile;
+    return done(null, userProfile);
 }));
 
-passport.serializeUser((user, done) => {
-    done(null, user._id);
+passport.serializeUser(function (user, cb) {
+    cb(null, user);
 });
 
-passport.deserializeUser((_id, done) => {
-    modeloUsuario.findById(_id, done);
+passport.deserializeUser(function (obj, cb) {
+    cb(null, obj);
 });
-
-
 
 const authWebRouter = new Router()
-
-authWebRouter.use(session({
-    secret: 'shhhhhhhhhhhhhhhhhhhhh',
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    cookie: {
-        maxAge: 600000
-    }
-}))
-
-authWebRouter.use(passport.initialize());
-authWebRouter.use(passport.session());
 
 authWebRouter.get('/login', (req, res) => {
     if (req.isAuthenticated()) {
@@ -105,41 +36,22 @@ authWebRouter.get('/login', (req, res) => {
     }
 })
 
-authWebRouter.post('/login', passport.authenticate('login',
+authWebRouter.get('/auth/facebook', passport.authenticate('facebook'));
+authWebRouter.get('/auth/facebook/callback', passport.authenticate('facebook',
     {
         successRedirect: '/',
         failureRedirect: '/faillogin'
     }
 ));
 
-authWebRouter.get('/register', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.redirect('/')
-    } else {
-        res.sendFile(path.join(process.cwd(), '/views/register.html'))
-    }
-})
-
-authWebRouter.post('/register', passport.authenticate('register',
-    {
-        successRedirect: '/',
-        failureRedirect: '/failregister'
-    }
-));
-
-
 authWebRouter.get('/faillogin', (req, res) => {
-    res.sendFile(path.join(process.cwd(), '/views/login-error.html'))
-})
-
-authWebRouter.get('/failregister', (req, res) => {
-    res.sendFile(path.join(process.cwd(), '/views/register-error.html'))
+    res.render('/views/pages/login-error.ejs');
 })
 
 authWebRouter.get('/logout', (req, res) => {
-    const username = req.user?.username ?? 'visitante'
+    const nombre = req.user?.displayName ?? 'visitante'
     req.logout()
-    res.render(path.join(process.cwd(), '/views/pages/logout.ejs'), { username })
+    res.render(path.join(process.cwd(), '/views/pages/logout.ejs'), { nombre })
 })
 
 export default authWebRouter
