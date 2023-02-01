@@ -1,4 +1,3 @@
-# Desafío 16
 
 ## Loggers, Gzip y análisis de performance.
 

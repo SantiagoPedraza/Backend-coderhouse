@@ -2,7 +2,7 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
 
  [Shared libraries]:
    ticks  total  nonlib   name
-   1245   81.3%          /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+   1245   81.3%          /home/santiago/.nvm/versions/node/v16.13.1/bin/node
      31    2.0%          /usr/lib/x86_64-linux-gnu/libc-2.31.so
       7    0.5%          /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
 
@@ -103,8 +103,8 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
   Callers occupying less than 1.0% are not shown.
 
    ticks parent  name
-   1245   81.3%  /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-    990   79.5%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+   1245   81.3%  /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+    990   79.5%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
     509   51.4%      Function: ^compileFunction node:vm:308:25
     502   98.6%        Function: ^wrapSafe node:internal/modules/cjs/loader:1017:18
     500   99.6%          Function: ^Module._compile node:internal/modules/cjs/loader:1055:37
@@ -171,7 +171,7 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
       3    3.8%        LazyCompile: ~compileForPublicLoader node:internal/bootstrap/loaders:246:25
       3  100.0%          LazyCompile: ~loadNativeModule node:internal/modules/cjs/helpers:44:26
       3  100.0%            LazyCompile: ~builtinStrategy node:internal/modules/esm/translators:270:58
-     33    3.3%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     33    3.3%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       6   18.2%        Function: ^readPackage node:internal/modules/cjs/loader:290:21
       5   83.3%          Function: ^readPackageScope node:internal/modules/cjs/loader:321:26
       5  100.0%            Function: ^Module._extensions..js node:internal/modules/cjs/loader:1110:37
@@ -314,8 +314,8 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
       1  100.0%            Function: ^moduleResolve node:internal/modules/esm/resolve:917:23
 
      95    6.2%  __write
-     82   86.3%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-      7    8.5%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     82   86.3%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+      7    8.5%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       1   14.3%        LazyCompile: ~trimControlChars /home/esteban/Desktop/Backend/Entrega-16/node_modules/whatwg-url/lib/url-state-machine.js:445:26
       1  100.0%          Function: ^URLStateMachine /home/esteban/Desktop/Backend/Entrega-16/node_modules/whatwg-url/lib/url-state-machine.js:481:25
       1  100.0%            LazyCompile: ~module.exports.basicURLParse /home/esteban/Desktop/Backend/Entrega-16/node_modules/whatwg-url/lib/url-state-machine.js:1206:41
@@ -613,8 +613,8 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
       1    1.2%      Function: ^processTicksAndRejections node:internal/process/task_queues:68:35
 
      31    2.0%  /usr/lib/x86_64-linux-gnu/libc-2.31.so
-     22   71.0%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-      4   18.2%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     22   71.0%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+      4   18.2%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       2   50.0%        Function: ^readPackage node:internal/modules/cjs/loader:290:21
       2  100.0%          Function: ^readPackageScope node:internal/modules/cjs/loader:321:26
       2  100.0%            Function: ^Module._extensions..js node:internal/modules/cjs/loader:1110:37
@@ -698,7 +698,7 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
       1  100.0%            Function: ^tryExtensions node:internal/modules/cjs/loader:400:23
 
      30    2.0%  fwrite
-     27   90.0%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     27   90.0%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       2    7.4%      LazyCompile: ~createAppender /home/esteban/Desktop/Backend/Entrega-16/node_modules/log4js/lib/appenders/index.js:62:24
       2  100.0%        LazyCompile: ~getAppender /home/esteban/Desktop/Backend/Entrega-16/node_modules/log4js/lib/appenders/index.js:48:21
       2  100.0%          LazyCompile: ~<anonymous> /home/esteban/Desktop/Backend/Entrega-16/node_modules/log4js/lib/appenders/index.js:112:41
@@ -790,7 +790,7 @@ Statistical profiling result from SINCLGisolate-0x4a96020-31792-v8.log, (1531 ti
       1  100.0%        Function: ^Module._compile node:internal/modules/cjs/loader:1055:37
       1  100.0%          Function: ^Module._extensions..js node:internal/modules/cjs/loader:1110:37
       1  100.0%            Function: ^Module.load node:internal/modules/cjs/loader:969:33
-      1    3.7%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+      1    3.7%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       1  100.0%        LazyCompile: ~MongoStore /home/esteban/Desktop/Backend/Entrega-16/node_modules/connect-mongo/build/main/lib/MongoStore.js:75:16
       1  100.0%          LazyCompile: ~create /home/esteban/Desktop/Backend/Entrega-16/node_modules/connect-mongo/build/main/lib/MongoStore.js:135:18
       1  100.0%            Script: ~<anonymous> file:///home/esteban/Desktop/Backend/Entrega-16/src/server.js:1:1

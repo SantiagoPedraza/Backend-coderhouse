@@ -2,7 +2,7 @@ Statistical profiling result from CONCLGisolate-0x5b25020-31956-v8.log, (1617 ti
 
  [Shared libraries]:
    ticks  total  nonlib   name
-   1310   81.0%          /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+   1310   81.0%          /home/santiago/.nvm/versions/node/v16.13.1/bin/node
      28    1.7%          /usr/lib/x86_64-linux-gnu/libc-2.31.so
       8    0.5%          /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
 
@@ -102,8 +102,8 @@ Statistical profiling result from CONCLGisolate-0x5b25020-31956-v8.log, (1617 ti
   Callers occupying less than 1.0% are not shown.
 
    ticks parent  name
-   1310   81.0%  /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-   1050   80.2%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+   1310   81.0%  /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+   1050   80.2%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
     560   53.3%      Function: ^compileFunction node:vm:308:25
     558   99.6%        Function: ^wrapSafe node:internal/modules/cjs/loader:1017:18
     556   99.6%          Function: ^Module._compile node:internal/modules/cjs/loader:1055:37
@@ -309,11 +309,11 @@ Statistical profiling result from CONCLGisolate-0x5b25020-31956-v8.log, (1617 ti
       1  100.0%            LazyCompile: ~Module._load node:internal/modules/cjs/loader:757:24
 
      97    6.0%  __write
-     79   81.4%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-      9   11.4%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     79   81.4%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+      9   11.4%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       1   11.1%        Script: ~<anonymous> file:///home/esteban/Desktop/Backend/Entrega-16/src/loggers/Log4jsLogger.js:1:1
-      1  100.0%          /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-      1  100.0%            /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+      1  100.0%          /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+      1  100.0%            /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       1   11.1%        LazyCompile: ~URL node:internal/url:620:14
       1  100.0%          LazyCompile: ~pathToFileURL node:internal/url:1455:23
       1  100.0%            LazyCompile: ~<anonymous> node:internal/modules/run_main:47:29
@@ -586,7 +586,7 @@ Statistical profiling result from CONCLGisolate-0x5b25020-31956-v8.log, (1617 ti
       1  100.0%            LazyCompile: ~<anonymous> /home/esteban/Desktop/Backend/Entrega-16/node_modules/mongodb/lib/sdam/monitor.js:204:52
 
      34    2.1%  fwrite
-     31   91.2%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     31   91.2%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       3    9.7%      LazyCompile: ~toRealPath node:internal/modules/cjs/loader:393:20
       3  100.0%        LazyCompile: ~Module._findPath node:internal/modules/cjs/loader:494:28
       3  100.0%          LazyCompile: ~resolveMainPath node:internal/modules/run_main:11:25
@@ -594,8 +594,8 @@ Statistical profiling result from CONCLGisolate-0x5b25020-31956-v8.log, (1617 ti
       3    9.7%      LazyCompile: ~createAppender /home/esteban/Desktop/Backend/Entrega-16/node_modules/log4js/lib/appenders/index.js:62:24
       3  100.0%        LazyCompile: ~getAppender /home/esteban/Desktop/Backend/Entrega-16/node_modules/log4js/lib/appenders/index.js:48:21
       3  100.0%          LazyCompile: ~<anonymous> /home/esteban/Desktop/Backend/Entrega-16/node_modules/log4js/lib/appenders/index.js:112:41
-      3  100.0%            /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-      3    9.7%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+      3  100.0%            /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+      3    9.7%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       1   33.3%        LazyCompile: ~parseOptions /home/esteban/Desktop/Backend/Entrega-16/node_modules/mongoose/node_modules/mongodb/lib/connection_string.js:208:22
       1  100.0%          LazyCompile: ~MongoClient /home/esteban/Desktop/Backend/Entrega-16/node_modules/mongoose/node_modules/mongodb/lib/mongo_client.js:60:16
       1  100.0%            LazyCompile: ~<anonymous> /home/esteban/Desktop/Backend/Entrega-16/node_modules/mongoose/lib/connection.js:781:31
@@ -693,8 +693,8 @@ Statistical profiling result from CONCLGisolate-0x5b25020-31956-v8.log, (1617 ti
       1  100.0%            LazyCompile: ~Module._resolveLookupPaths node:internal/modules/cjs/loader:667:38
 
      28    1.7%  /usr/lib/x86_64-linux-gnu/libc-2.31.so
-     24   85.7%    /home/esteban/.nvm/versions/node/v16.13.1/bin/node
-      5   20.8%      /home/esteban/.nvm/versions/node/v16.13.1/bin/node
+     24   85.7%    /home/santiago/.nvm/versions/node/v16.13.1/bin/node
+      5   20.8%      /home/santiago/.nvm/versions/node/v16.13.1/bin/node
       1   20.0%        Function: ^readPackage node:internal/modules/cjs/loader:290:21
       1  100.0%          Function: ^readPackageScope node:internal/modules/cjs/loader:321:26
       1  100.0%            Function: ^Module._extensions..js node:internal/modules/cjs/loader:1110:37
