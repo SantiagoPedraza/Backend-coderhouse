@@ -1,7 +1,8 @@
-Funcionamiento
-En backend/Entrega-23
+Servidor simple en Deno con persistencia de datos en MongoDB.
 
-npm run dev
-[2022-07-23T20:13:56.088] [INFO] default - 🚀 Server started at http://localhost:6965
-[2022-07-23T20:13:56.095] [INFO] default - 🕸️ GraphQL Playground: http://localhost:6965/graphql
-[2022-07-23T20:13:56.117] [INFO] default - 🆗 Conectados a MongoDB
+Para iniciar scripts.json (cuando estes creando un nuevo proyecto):
+
+denon --init
+Para correr el script que inicia el server, en Entrega-24/:
+
+denon start
