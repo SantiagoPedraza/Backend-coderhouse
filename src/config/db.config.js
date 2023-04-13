@@ -1,15 +1,13 @@
-import { MongoClient } from "../deps.ts";
-import { Product } from "../types/product.type.ts";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import logger from '../utils/loggers/Log4jsLogger.js';
 
-const client = new MongoClient();
+dotenv.config();
 
-try {
-    await client.connect("mongodb://127.0.0.1:27017");
-    console.log("🆗 Conectados a MongoDB");
-} catch (error) {
-    console.log(error);
-}
+mongoose.connect(process.env.MONGO_URI, (err) => {
+    err
+        ? logger.error("⛔ Error al conectarse a MongoDB")
+        : logger.info("🆗 Conectados a MongoDB")
+})
 
-const db = client.database('deno');
-
-export const products = db.collection<Product>('products');
+export default mongoose;
